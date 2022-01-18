@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Auth::routes();
+
+Route::middleware(['guest'])->group(function () {
+  Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+});
+
+Route::middleware(['auth', 'verified', 'prevent_back_history'])->group(function () {
+  Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [Admin\HomeController::class, 'index'])->name('dashboard');
+  });
+
 });
