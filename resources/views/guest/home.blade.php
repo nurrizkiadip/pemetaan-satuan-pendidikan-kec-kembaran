@@ -4,7 +4,6 @@
 
 @section('styles')
   <!-- Leaflet -->
-  {{--  <link href="{{ asset('leaflet/leaflet.css') }}">--}}
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
         integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
         crossorigin=""/>
@@ -40,15 +39,7 @@
   <script type="text/javascript">
       const mbAttr = 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>';
       const mbUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}';
-      const accessToken = 'pk.eyJ1IjoibnVycml6a2lhZGlwIiwiYSI6ImNrd2JuaG93dDE5eG8yd3AyZnhsdWN1MzAifQ.N-38M6Xh_0Tr5Y3t10SlpQ';
-
-      //Add Layer Group
-      // const cities = L.layerGroup();
-      // const mLittleton = L.marker([39.61, -105.02]).bindPopup('This is Littleton, CO.').addTo(cities);
-      // const mDenver = L.marker([39.74, -104.99]).bindPopup('This is Denver, CO.').addTo(cities);
-      // const mAurora = L.marker([39.73, -104.8]).bindPopup('This is Aurora, CO.').addTo(cities);
-      // const mGolden = L.marker([39.77, -105.23]).bindPopup('This is Golden, CO.').addTo(cities);
-
+      const accessToken = '{!! config('app.mb_access_token') !!}';
 
       const grayscale = L.tileLayer(mbUrl, {
           id: 'mapbox/light-v9',
@@ -71,6 +62,9 @@
           attribution: mbAttr,
           accessToken: accessToken
       });
+      const openStreetMap = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          attribution: "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors",
+      });
       const dark = L.tileLayer(mbUrl, {
           id: 'mapbox/dark-v10',
           tileSize: 512,
@@ -88,6 +82,7 @@
           "<span style='color: gray'>Grayscale</span>": grayscale,
           "Streets": streets,
           "Satellite": satellite,
+          "OpenStreetMap": openStreetMap,
           "Dark": dark,
       };
       const overlayMaps = {
@@ -101,10 +96,10 @@
           center: [-7.4146026, 109.287500],
           zoom: 14,
           layers: [
-              streets,
-            @foreach ($villages as $item)
-                village{{$item->id}}LayerGroup,
-            @endforeach
+              openStreetMap,
+              @foreach ($villages as $item)
+              village{{$item->id}}LayerGroup,
+              @endforeach
           ]
       });
 
@@ -125,45 +120,51 @@
       @foreach ($schools as $item)
 
       @if (Str::contains($item->name, '`'))
-      const separateMsgPopup{{$item->id}} = [
-          "{{\Str::before($item->name, '`')}}",
-          "{{\Str::after($item->name, '`')}}",
-      ];
-      const villageName{{$item->id}} = separateMsgPopup{{$item->id}}[0] + separateMsgPopup{{$item->id}}[1];
+        const villageName{{$item->id}} = "{{ \Str::replace('`', '\`', $item->name) }}";
       @else
-      const villageName{{$item->id}} = "{{$item->name}}";
+        const villageName{{$item->id}} = "{{$item->name}}";
       @endif
 
       const msgPopup{{$item->id}} = `
-        <table border="1">
+        <p class="text-center text-sm text-bold text-uppercase">Detail Sekolah</p>
+        <table>
         <tbody>
+          @if (file_from_public_storage_exists($item->logo_photo_path))
+            <tr>
+                <td colspan="2" class="text-bold"><img src="{{ get_file_from_public_storage($item->logo_photo_path) }}" width="100%"></td>
+            </tr>
+          @endif
           <tr>
             <td class="text-bold">Nama</td>
-            <td>${villageName{{$item->id}}}</td>
+            <td>: ${villageName{{$item->id}}}</td>
           </tr>
           <tr>
             <td class="text-bold">Jenjang</td>
-            <td>{{$item->schoolLevel->name}}</td>
+            <td>: {{$item->schoolLevel->name}}</td>
           </tr>
           <tr>
             <td class="text-bold">Status</td>
-            <td>{{$item->village->name}}</td>
+            <td>: {{$item->village->name}}</td>
           </tr>
           <tr>
             <td class="text-bold">Status</td>
-            <td>{{$item->status}}</td>
+            <td>: {{$item->status}}</td>
           </tr>
         </tbody>
         </table>
       `;
       L.marker([{{$item->lat}}, {{$item->lang}}], {
-          // icon: L.icon({
-          //     iconSize:     [38, 95], // size of the icon
-          //     shadowSize:   [50, 64], // size of the shadow
-          //     iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
-          //     shadowAnchor: [4, 62],  // the same for the shadow
-          //     popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
-          // })
+          @if ($item->schoolLevel->icon !== null)
+              icon: L.icon({
+              iconUrl: '{{ get_file_from_public_storage($item->schoolLevel->icon) }}',
+
+              iconSize:     [30, 37.5], // size of the icon
+              shadowSize:   [50, 64], // size of the shadow
+              iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+              shadowAnchor: [4, 62],  // the same for the shadow
+              popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+          })
+          @endif
       }).bindPopup(msgPopup{{$item->id}}).addTo(map);
       @endforeach
 

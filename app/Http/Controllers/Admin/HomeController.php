@@ -18,10 +18,10 @@ class HomeController extends Controller
   public function index()
   {
     $villagesCount = Village::count();
-    $schoolLevelsCount = SchoolLevel::count();
+    $schoolLevels = SchoolLevel::withCount(['schools'])->orderBy('name')->get();
     $schools = School::get('status');
     return view('admin.home', compact(
-      'villagesCount', 'schoolLevelsCount', 'schools'
+      'villagesCount', 'schoolLevels', 'schools'
     ));
   }
 }

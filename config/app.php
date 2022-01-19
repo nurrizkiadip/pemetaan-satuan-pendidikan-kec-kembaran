@@ -67,7 +67,7 @@ return [
   |
   */
 
-  'timezone' => 'UTC',
+  'timezone' => env('APP_TIMEZONE', 'UTC'),
 
   /*
   |--------------------------------------------------------------------------
@@ -80,7 +80,7 @@ return [
   |
   */
 
-  'locale' => 'en',
+  'locale' => env('APP_LOCALE', 'en'),
 
   /*
   |--------------------------------------------------------------------------
@@ -93,7 +93,7 @@ return [
   |
   */
 
-  'fallback_locale' => 'en',
+  'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
 
   /*
   |--------------------------------------------------------------------------
@@ -106,7 +106,7 @@ return [
   |
   */
 
-  'faker_locale' => 'en_US',
+  'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
 
   /*
   |--------------------------------------------------------------------------
@@ -122,6 +122,11 @@ return [
   'key' => env('APP_KEY'),
 
   'cipher' => 'AES-256-CBC',
+
+  /*
+   * MAPBOX Access Token*/
+
+  'mb_access_token' => env('ACCESS_TOKEN_MB', 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw'),
 
   /*
   |--------------------------------------------------------------------------

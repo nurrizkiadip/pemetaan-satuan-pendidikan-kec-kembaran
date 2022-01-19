@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use GuzzleHttp\Psr7\UploadedFile;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Village extends Model
 {
@@ -14,6 +16,23 @@ class Village extends Model
     'color',
     'geojson_path',
   ];
+
+  public function updateGeoJSON(UploadedFile $file, String $filename)
+  {
+    tap($this->geojson_path, function ($previous) use ($file, $filename) {
+      $this->forceFill([
+        'geojson_path' => $file->storePubliclyAs(
+            'villages/geojson',
+            $filename,
+            ['disk' => 'public']
+          ),
+      ])->save();
+
+      if ($previous) {
+        Storage::disk('public')->delete($previous);
+      }
+    });
+  }
 
   public function schools()
   {

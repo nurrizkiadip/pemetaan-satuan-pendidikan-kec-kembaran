@@ -29,15 +29,15 @@ class SchoolLevelSeeder extends Seeder
       ],
       [
         'name' => 'MTsS',
-        'icon' => null,
+        'icon' => 'school-level/icon/mts.png',
       ],
       [
         'name' => 'SD',
-        'icon' => null,
+        'icon' => 'school-level/icon/sd.png',
       ],
       [
         'name' => 'SMK',
-        'icon' => null,
+        'icon' => 'school-level/icon/sma.png',
       ],
       [
         'name' => 'SMKS',
@@ -45,7 +45,7 @@ class SchoolLevelSeeder extends Seeder
       ],
       [
         'name' => 'SMP',
-        'icon' => null,
+        'icon' => 'school-level/icon/smp.png',
       ],
     ];
 

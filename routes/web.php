@@ -24,6 +24,14 @@ Route::middleware(['guest'])->group(function () {
 Route::middleware(['auth', 'verified', 'prevent_back_history'])->group(function () {
   Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [Admin\HomeController::class, 'index'])->name('dashboard');
+
+    Route::resource('/dashboard/school-level', Admin\SchoolLevelController::class)
+      ->parameter('school-level', 'school_level')
+      ->except(['index', 'show']);
+
+    Route::resource('/dashboard/village', Admin\VillageController::class);
+    Route::resource('/dashboard/village/{village}/school', Admin\SchoolController::class)
+    ->except(['index']);
   });
 
 });
