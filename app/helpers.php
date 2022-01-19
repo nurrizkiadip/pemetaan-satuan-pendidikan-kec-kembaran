@@ -42,7 +42,7 @@ if (!function_exists('file_from_public_storage_exists')) {
   }
 }
 
-if (!function_exists('get_file_from_public_storage')) {
+if (!function_exists('get_datetime')) {
   function get_datetime(): string
   {
     $now = now();

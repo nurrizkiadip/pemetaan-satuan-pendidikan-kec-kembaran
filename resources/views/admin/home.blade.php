@@ -2,6 +2,11 @@
 
 @section('title', 'Beranda')
 
+@section('styles')
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="{{ asset('adminlte/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css') }}">
+@endsection
+
 @section('content-header')
   <div class="container-fluid">
     <div class="row mb-2">
@@ -95,6 +100,15 @@
             </div>
           </div>
           <div class="card-body">
+            @if (session()->has('status') && session()->has('message'))
+              <div class="alert alert-{{session()->get('status')}} alert-dismissible fade show" role="alert">
+                <span>{!!session()->get('message')!!}</span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+            @endif
+
             <div class="card-tools mb-4 d-flex justify-content-end">
               <a href="{{ route('admin.school-level.create') }}"
                  class="btn btn-primary"

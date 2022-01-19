@@ -65,7 +65,7 @@
           <div class="form-group">
             <label class="col-form-label" for="color">Warna</label>
             <div class="input-group my-colorpicker2">
-              <input type="text" id="color" value="{{ old('color') }}" class="form-control">
+              <input type="text" name="color" id="color" value="{{ old('color') }}" class="form-control">
               <div class="input-group-append">
                 <span class="input-group-text"><i class="fas fa-square"></i></span>
               </div>

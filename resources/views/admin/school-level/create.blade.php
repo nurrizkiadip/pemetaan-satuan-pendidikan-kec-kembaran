@@ -34,7 +34,6 @@
         <form action="{{ route('admin.school-level.store') }}"
               method="POST" enctype="multipart/form-data">
           @csrf
-          @method('PUT')
 
           @if($errors->any())
             <div class="alert alert-warning alert-dismissible fade show" role="alert">

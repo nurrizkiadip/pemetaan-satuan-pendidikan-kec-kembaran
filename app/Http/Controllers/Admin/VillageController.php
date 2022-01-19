@@ -45,7 +45,8 @@ class VillageController extends Controller
       'color' => ['required', 'unique:villages,color'],
       'geojson' => ['required'],
     ]);
-
+    
+    $validatedInput['geojson_path'] = $validatedInput['geojson'];
     $villageCreated = Village::create($validatedInput);
     if ($validatedInput['geojson'] !== null) {
       $filename = strtolower(\Str::replace(' ', '_', $validatedInput['name']) .

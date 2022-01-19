@@ -97,6 +97,7 @@
 											<i class="mr-2 fas fa-pencil-alt"></i>Edit
 										</a>
                     <a class="btn btn-danger btn-xs text-nowrap village-delete-btn"
+                       data-schools-count="{{$item->schools_count}}"
                        data-village-id="{{$item->id}}"
                        href="{{ route('admin.village.destroy', [$item->id]) }}"
                     ><i class="mr-2 fas fa-trash"></i>Delete

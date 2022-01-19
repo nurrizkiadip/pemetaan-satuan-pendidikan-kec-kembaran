@@ -37,7 +37,7 @@ class SchoolLevelController extends Controller
       $schoolLevelCreated->updateIcon($validatedInput['icon']);
     }
 
-    return redirect()->route('admin.school-level.index')->with([
+    return redirect()->route('admin.dashboard')->with([
       'status' => 'success',
       'message' => "Jenjang Sekolah <b>$schoolLevelCreated->name</b> berhasil dibuat"
     ]);
@@ -76,11 +76,12 @@ class SchoolLevelController extends Controller
       unset($validatedInput['icon']);
     }
 
+    $oldName = $schoolLevel->name;
     $schoolLevel->update($validatedInput);
 
-    return redirect()->route('admin.school-level.index')->with([
+    return redirect()->route('admin.dashboard')->with([
       'status' => 'success',
-      'message' => "Jenjang Sekolah <b>$schoolLevel->name</b> berhasil diupdate"
+      'message' => "Jenjang Sekolah <b>$oldName</b> berhasil diupdate menjadi <b>$schoolLevel->name</b>"
     ]);
   }
 
