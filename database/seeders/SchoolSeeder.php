@@ -520,7 +520,7 @@ class SchoolSeeder extends Seeder
     ];
 
     foreach ($schools as $school) {
-      if ($school['logo_photo_path'] === null && $school['lat'] != '') {
+      if ($school['lat'] != '' && $school['lang'] != '') {
         $school['school_level_id'] = SchoolLevel::where('name', $school['school_level_id'])
           ->get()->first()->id;
         $school['village_id'] = Village::where('name', \Str::title($school['village_id']))

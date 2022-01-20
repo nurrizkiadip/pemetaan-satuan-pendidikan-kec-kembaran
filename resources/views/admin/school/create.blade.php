@@ -46,7 +46,6 @@
         <form action="{{ route('admin.school.store', [$village->id]) }}"
               method="POST" enctype="multipart/form-data">
           @csrf
-          @method('PUT')
 
           @if($errors->any())
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -98,12 +97,12 @@
                     class="form-control select2bs4 @error('status') is-invalid @enderror"
                     data-placeholder="Pilih...">
                   <option
-                      {{ old('status', $school->status) === "NEGERI" ? 'selected' : '' }}
+                      {{ old('status') === "NEGERI" ? 'selected' : '' }}
                       value="NEGERI">
                     NEGERI
                   </option>
                   <option
-                      {{ old('status', $school->status) === "SWASTA" ? 'selected' : '' }}
+                      {{ old('status') === "SWASTA" ? 'selected' : '' }}
                       value="SWASTA">
                     SWASTA
                   </option>
@@ -144,7 +143,8 @@
             <label for="logo_photo_path">Logo</label>
             <div class="input-group">
               <div class="custom-file">
-                <input type="file" class="custom-file-input" name="logo_photo_path" id="logo_photo_path" accept="image/*">
+                <input type="file" class="custom-file-input" name="logo_photo_path" id="logo_photo_path"
+                       accept="image/*">
                 <label class="custom-file-label" for="logo_photo_path">Pilih Berkas</label>
               </div>
               <div class="input-group-append">
@@ -271,7 +271,7 @@
           };
           // Define instance of map
           const map = L.map('map', {
-              center: [{{$school->lat}}, {{$school->lang}}],
+              center: [{{ old('lat', -7.4146026) }}, {{ old('lang', 109.287500) }}],
               zoom: 14,
               layers: [
                   openStreetMap,
@@ -280,44 +280,11 @@
           const layerControl = L.control.layers(baseMaps).addTo(map);
 
 
-        @if (Str::contains($school->name, '`'))
-          const separateMsgPopup{{$school->id}} = [
-              "{{\Str::before($school->name, '`')}}",
-              "{{\Str::after($school->name, '`')}}",
-          ];
-          const villageName{{$school->id}} = separateMsgPopup{{$school->id}}[0] + separateMsgPopup{{$school->id}}[1];
-        @else
-          const villageName{{$school->id}} = "{{$school->name}}";
-        @endif
-
-          const msgPopup{{$school->id}} = `
-              <table border="1">
-              <tbody>
-                  <tr>
-                    <td class="text-bold">Nama</td>
-                    <td>${villageName{{$school->id}}}</td>
-                  </tr>
-                  <tr>
-                    <td class="text-bold">Jenjang</td>
-                    <td>{{$school->schoolLevel->name}}</td>
-                  </tr>
-                  <tr>
-                    <td class="text-bold">Status</td>
-                    <td>{{$school->village->name}}</td>
-                  </tr>
-                  <tr>
-                    <td class="text-bold">Status</td>
-                    <td>{{$school->status}}</td>
-                  </tr>
-              </tbody>
-              </table>
-          `;
-
           const currentLocation = [{{ old('lat', -7.4146026) }}, {{ old('lang', 109.287500) }}];
           map.attributionControl.setPrefix(false);
           const markerDraggable = new L.marker(currentLocation, {
               draggable: 'true'
-          }).bindPopup(msgPopup{{$school->id}});
+          });
 
           map.addLayer(markerDraggable);
 

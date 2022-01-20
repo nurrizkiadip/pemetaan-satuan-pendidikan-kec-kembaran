@@ -19,7 +19,13 @@
 </div>
 
 <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
-  @if (Route::has('login') && !request()->routeIs('login'))
+  @if (auth()->check())
+    <li class="nav-item dropdown">
+      <a class="nav-link" href="{{ route('admin.dashboard') }}"
+      >Dashboard</a>
+    </li>
+  @endif
+  @if (Route::has('login') && !request()->routeIs('login') && !auth()->check())
     <li class="nav-item dropdown">
       <a class="nav-link" href="{{ route('login') }}"
       >Log in</a>

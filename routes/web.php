@@ -22,6 +22,8 @@ Route::middleware(['guest'])->group(function () {
 });
 
 Route::middleware(['auth', 'verified', 'prevent_back_history'])->group(function () {
+  Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
   Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [Admin\HomeController::class, 'index'])->name('dashboard');
 
